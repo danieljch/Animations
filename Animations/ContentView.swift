@@ -9,25 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var animationAmount = 0.0
+    @State private var enabled = true
     
     var body: some View {
         ZStack {
             Color.brown
                 .ignoresSafeArea()
-            Button {
-                withAnimation(.interpolatingSpring(stiffness: 4, damping: 1)) {
-                    animationAmount += 360
-                }
-            } label:{
-                Text("Press Me")
-                   
+            Button("Tap Me") {
+                enabled.toggle()
             }
-            .padding(40)
-            .background(.red)
+            .frame(width: 200, height: 200)
+            .background(enabled ? .blue : .red)
+            .animation(nil, value: enabled)
             .foregroundColor(.white)
-            .clipShape(Circle())
-         
-            .rotation3DEffect(.degrees(animationAmount), axis: (x: 0, y: 0, z: 1))
+            .clipShape(RoundedRectangle(cornerRadius: enabled ? 60 : 0))
+            .animation(.interpolatingSpring(stiffness: 10, damping: 1), value: enabled)
             
         }
     }
