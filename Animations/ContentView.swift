@@ -8,27 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var animationAmount = 1.0
+    @State private var animationAmount = 0.0
     
     var body: some View {
         ZStack {
             Color.brown
                 .ignoresSafeArea()
             Button {
-                animationAmount += 0.5
+                withAnimation(.interpolatingSpring(stiffness: 4, damping: 1)) {
+                    animationAmount += 360
+                }
             } label:{
                 Text("Press Me")
-                    .padding(40)
-                   .contentShape(Circle())
+                   
             }
-               
-            .background(Color(.sRGB, red: 0.2 + animationAmount / 3, green: 0.3 * animationAmount, blue: 1-animationAmount/2, opacity: 1))
+            .padding(40)
+            .background(.red)
             .foregroundColor(.white)
             .clipShape(Circle())
-            .scaleEffect(animationAmount)
-           // .blur(radius: (animationAmount - 1) * 3)
-         //   .animation(.interpolatingSpring(stiffness: 40, damping: 0.1), value: animationAmount)
-            .animation(.easeInOut(duration: 0.5), value: animationAmount)
+         
+            .rotation3DEffect(.degrees(animationAmount), axis: (x: 0, y: 0, z: 1))
             
         }
     }
