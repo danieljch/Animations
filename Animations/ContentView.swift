@@ -8,31 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var animationAmount = 1.0
-    
-    var body: some View {
-        ZStack {
-            Color.brown
-                .ignoresSafeArea()
-            Button {
-                animationAmount += 0.5
-            } label:{
-                Text("Press Me")
-                    .padding(40)
-                   .contentShape(Circle())
+    let letters = Array("Hello SwiftUI")
+        @State private var enabled = false
+        @State private var dragAmount = CGSize.zero
+
+        var body: some View {
+            HStack(spacing: 0) {
+                ForEach(0..<letters.count) { num in
+                    Text(String(letters[num]))
+                        .padding(5)
+                        .font(.title)
+                        .background(enabled ? .blue : .red)
+                        .offset(dragAmount)
+                        .animation(.default.delay(Double(num) / 20), value: dragAmount)
+                }
             }
-               
-            .background(Color(.sRGB, red: 0.2 + animationAmount / 3, green: 0.3 * animationAmount, blue: 1-animationAmount/2, opacity: 1))
-            .foregroundColor(.white)
-            .clipShape(Circle())
-            .scaleEffect(animationAmount)
-           // .blur(radius: (animationAmount - 1) * 3)
-         //   .animation(.interpolatingSpring(stiffness: 40, damping: 0.1), value: animationAmount)
-            .animation(.easeInOut(duration: 0.5), value: animationAmount)
-            
+            .gesture(
+                DragGesture()
+                    .onChanged { dragAmount = $0.translation }
+                    .onEnded { _ in
+                        dragAmount = .zero
+                        enabled.toggle()
+                    }
+            )
         }
     }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
